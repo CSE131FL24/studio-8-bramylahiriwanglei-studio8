@@ -2,14 +2,18 @@ package studio8;
 
 public class SelectAllQuestion extends MultipleChoiceQuestion {
 
-	public SelectAllQuestion(String prompt, String answer, String[] choices) {
+	public SelectAllQuestion(String prompt, String answer, int points, String[] choices) {
 		//Hint: 1 point per choice
 		//FIXME
+		super(prompt, answer, points, choices);
 	}
 	
 	public int checkAnswer(String givenAnswer) {
-		//FIXME Should return partial credit (if earned)!
-		return 0;
+		int points = this.getPoints();
+		points -= findMissingCorrectAnswers(givenAnswer);
+		points -= findIncorrectGivenAnswers(givenAnswer);
+		return points > 0 ? points : 0;
+		
 	}
 
 	private int findMissingCorrectAnswers(String givenAnswer) {
@@ -46,7 +50,7 @@ public class SelectAllQuestion extends MultipleChoiceQuestion {
 	
 	public static void main(String[] args) {
 		String[] choices = {"instance variables", "git", "methods", "eclipse"};
-		Question selectAll = new SelectAllQuestion("Select all of the following that can be found within a class:", "13", choices);
+		Question selectAll = new SelectAllQuestion("Select all of the following that can be found within a class:", "13", 4, choices);
 		selectAll.displayPrompt();
 		System.out.println(selectAll.checkAnswer("hi")); //no credit
 		System.out.println(selectAll.checkAnswer("2")); //1 point
